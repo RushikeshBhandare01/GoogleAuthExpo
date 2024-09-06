@@ -22,12 +22,15 @@ export default function App() {
     try {
       await GoogleSignin.hasPlayServices();
       const response = await GoogleSignin.signIn();
+      console.log(" response", response);
       if (isSuccessResponse(response)) {
         setUserData({ userInfo: response.data });
       } else {
         // sign in was cancelled by user
       }
     } catch (error) {
+      console.log("error - ", error);
+
       if (isErrorWithCode(error)) {
         switch (error.code) {
           case statusCodes.IN_PROGRESS:
@@ -40,6 +43,7 @@ export default function App() {
           // some other error happened
         }
       } else {
+        console.log("error - ", error);
         // an error that's not related to google sign in occurred
       }
     }
@@ -71,7 +75,15 @@ export default function App() {
 
   useEffect(() => {
     getCurrentUser();
+    // access token for login user
+    const getToken = async () => {
+      const tokens = await GoogleSignin.getTokens();
+      console.log("access token tokens ", tokens);
+    };
+    getToken();
   }, []);
+
+  console.log("userData ", userData);
 
   const renderLoginScreen = () => {
     return (
